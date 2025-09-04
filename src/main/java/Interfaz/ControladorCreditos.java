@@ -13,9 +13,9 @@ public class ControladorCreditos {
     @FXML private Button botonRegresar;
 
     public static void cerrarVentana(ActionEvent e) {
-        Node source = (Node) e.getSource();     //Me devuelve el elemento al que hice click
-        Stage stage = (Stage) source.getScene().getWindow();    //Me devuelve la ventana donde se encuentra el elemento
-        stage.close();                          //Me cierra la ventana
+        Node source = (Node) e.getSource();
+        Stage stage = (Stage) source.getScene().getWindow();
+        stage.close();
     }
 
     @FXML

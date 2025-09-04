@@ -94,4 +94,32 @@ public abstract class Carta implements Comparable<Carta> {
     public int getValorBajo() {
         return valorBajo;
     }
+
+    public String obtenerRuta() {
+        String nombreArchivo;
+
+        switch (getValor()) {
+            case 11:
+                nombreArchivo = "J" + getPalo() + ".png";
+                break;
+            case 12:
+                nombreArchivo = "Q" + getPalo() + ".png";
+                break;
+            case 13:
+                nombreArchivo = "K" + getPalo() + ".png";
+                break;
+            case 14:
+                nombreArchivo = "A" + getPalo() + ".png";
+                break;
+            default:
+                nombreArchivo = Integer.toString(getValor()) + getPalo() + ".png";
+                break;
+        }
+
+        if (!isFaceup()) {
+            return "/ImagenesCartas/cartaVolteada.png";
+        }
+
+        return "/ImagenesCartas/" + nombreArchivo;
+    }
 }

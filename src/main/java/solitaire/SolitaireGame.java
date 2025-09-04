@@ -66,36 +66,29 @@ public class SolitaireGame {
      */
     public boolean moveTableauToTableau(int tableauFuente, int tableauDestino) {
         boolean movimientoRealizado = false;
-        TableauDeck fuente = tableau.get(tableauFuente - 1);
+        TableauDeck fuente = tableau.get(tableauFuente);
         if (!fuente.isEmpty()) {
-            TableauDeck destino = tableau.get(tableauDestino - 1);
+            TableauDeck destino = tableau.get(tableauDestino);
 
             int valorQueDebeTenerLaCartaInicialDeLaFuente;
-            CartaInglesa cartaUltimaDelDestino; // aqui se coloca la fuente
+            CartaInglesa cartaUltimaDelDestino;
             if (!destino.isEmpty()) {
-                // si hay cartas en el destino, la ultima y primer debe concordar
                 cartaUltimaDelDestino = destino.verUltimaCarta();
                 valorQueDebeTenerLaCartaInicialDeLaFuente = cartaUltimaDelDestino.getValor() - 1;
             } else {
-                // si el destino está vacío, solo puede colocar rey
                 valorQueDebeTenerLaCartaInicialDeLaFuente = 13;
             }
-            // ver que carta es la del inicio del bloque
             CartaInglesa cartaInicialDePrueba = fuente.viewCardStartingAt(valorQueDebeTenerLaCartaInicialDeLaFuente);
             if (cartaInicialDePrueba != null && destino.sePuedeAgregarCarta(cartaInicialDePrueba)) {
                 ArrayList<CartaInglesa> cartas = fuente.removeStartingAt(valorQueDebeTenerLaCartaInicialDeLaFuente);
                 if (destino.agregarBloqueDeCartas(cartas)) {
                     if (!fuente.isEmpty()) {
-                        // Voltear la carta que se destapa en el Tableau
                         fuente.verUltimaCarta().makeFaceUp();
                     }
                     movimientoRealizado = true;
                 }
             }
-
         }
-
-
         return movimientoRealizado;
     }
 
