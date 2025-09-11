@@ -44,6 +44,7 @@ public class ControladorTablero {
     Button salir = new Button("Salir");
     Button reiniciarJuego = new Button("Reiniciar Juego");
     Button reiniciarMazo = new Button("Reiniciar Mazo");
+    Button deshacerAccion = new Button("Deshacer Accion (stand by)");
 
     TableroGUI tableroGUI;
 
@@ -59,6 +60,9 @@ public class ControladorTablero {
     }
 
     public void actualizarGUI(){
+        generarDrawPile();
+        generarWastePile();
+        actualizarReciclar();
         generarTablero();
         generarFoundations();
     }
@@ -105,7 +109,10 @@ public class ControladorTablero {
     public void generarDrawPile(){
         drawPile.getChildren().removeIf(n -> n.getUserData() != null);
         if(juegoSolitario.getDrawPile().hayCartas()){
-            StackPane carta = CartaGUI.getPane();
+            CartaInglesa cartaInglesa = juegoSolitario.getDrawPile().verCarta();
+            CartaGUI cardGUI = new CartaGUI(cartaInglesa);
+            cardGUI.voltearCarta();
+            StackPane carta = cardGUI.getPane();
             carta.setUserData("carta");
             drawPile.getChildren().add(carta);
         }
@@ -115,7 +122,8 @@ public class ControladorTablero {
         wastePile.getChildren().removeIf(n -> n.getUserData() != null);
         if(juegoSolitario.getWastePile().hayCartas()){
             CartaInglesa cartaSup = juegoSolitario.getWastePile().verCarta();
-            StackPane card = CartaGUI.getPane();
+            CartaGUI cardGUI = new  CartaGUI(cartaSup);
+            StackPane card = cardGUI.getPane();
             card.setUserData("carta");
 
             card.setOnMouseClicked(event -> {
@@ -125,8 +133,11 @@ public class ControladorTablero {
                if(seSeleccionoCarta){
                    return;
                }
-
+               tableuSeleccionado = -1;
+               seleccionOrigen = "WASTE PILE";
+               seSeleccionoCarta = true;
             });
+            wastePile.getChildren().add(card);
         }
     }
 
@@ -175,11 +186,17 @@ public class ControladorTablero {
             if(event.getButton() == MouseButton.PRIMARY){
                 if(juegoSolitario.getDrawPile().hayCartas()){
                     juegoSolitario.drawCards();
-
+                    actualizarSeleccion();
                     actualizarGUI();
                 }
             }
         });
+
+        deshacerAccion.setOnAction(event -> {
+
+        });
+        deshacerAccion.setStyle("-fx-background-color: linear-gradient(to bottom, #90CAF9, #1976D2);\n");
+        deshacerAccion.setTextFill(Color.WHITE);
 
         salir.setOnAction(event -> {
             Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
@@ -190,16 +207,45 @@ public class ControladorTablero {
             if(resultado.get() == ButtonType.OK){
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 stage.close();
+            }else if(resultado.get() == ButtonType.CANCEL){
+                Alert mensaje = new Alert(Alert.AlertType.INFORMATION);
+                mensaje.setTitle("El juego sigue");
+                mensaje.setHeaderText("¡Sigue con la partida!");
+                mensaje.setContentText("La partida no ha sido reiniciada");
+                mensaje.showAndWait();
             }
         });
+        salir.setStyle("-fx-background-color: linear-gradient(to bottom, #90CAF9, #1976D2);\n");
+        salir.setTextFill(Color.WHITE);
 
         reiniciarJuego.setOnAction(event -> {
-
+            Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmacion.setTitle("Reiniciar juego");
+            confirmacion.setHeaderText("Confirmación de reinicio");
+            confirmacion.setContentText("¿Estás seguro de reiniciar tu juego?");
+            Optional<ButtonType> resultado = confirmacion.showAndWait();
+            if(resultado.get() == ButtonType.OK){
+                juegoSolitario = new SolitaireGame();
+                actualizarSeleccion();
+                actualizarGUI();
+            }else if(resultado.get() == ButtonType.CANCEL){
+                Alert mensaje = new Alert(Alert.AlertType.INFORMATION);
+                mensaje.setTitle("El juego sigue");
+                mensaje.setHeaderText("¡Sigue con la partida!");
+                mensaje.setContentText("La partida no ha sido reiniciada");
+                mensaje.showAndWait();
+            }
         });
+        reiniciarJuego.setStyle("-fx-background-color: linear-gradient(to bottom, #90CAF9, #1976D2);\n");
+        reiniciarJuego.setTextFill(Color.WHITE);
 
         reiniciarMazo.setOnAction(event -> {
-
+            juegoSolitario.reloadDrawPile();
+            actualizarSeleccion();
+            actualizarGUI();
         });
+        reiniciarMazo.setStyle("-fx-background-color: linear-gradient(to bottom, #90CAF9, #1976D2);\n");
+        reiniciarMazo.setTextFill(Color.WHITE);
 
         for(int i=0; i<foundations.length; i++){
             foundations[i] = new StackPane();
@@ -225,8 +271,6 @@ public class ControladorTablero {
                 if(seMovioCarta){
                     actualizarGUI();
                 }
-
-
             });
         }
 
@@ -234,7 +278,7 @@ public class ControladorTablero {
         seccionDerecha.getChildren().addAll(foundations[0], foundations[1]
         , foundations[2], foundations[3]);
         seccionSuperior.getChildren().addAll();
-        seccionInferior.getChildren().addAll(salir, reiniciarJuego);
+        seccionInferior.getChildren().addAll(deshacerAccion, salir, reiniciarJuego);
 
         ventana.setTop(seccionSuperior);
         ventana.setBottom(seccionInferior);
@@ -280,5 +324,11 @@ public class ControladorTablero {
         seSeleccionoCarta = false;
         seleccionOrigen = "";
         tableuSeleccionado = -1;
+    }
+
+    public void actualizarReciclar(){
+        boolean cartasEnDrawPile = !juegoSolitario.getDrawPile().hayCartas();
+        boolean cartasEnWastePile = juegoSolitario.getWastePile().hayCartas();
+        reiniciarMazo.setDisable(!(cartasEnDrawPile && cartasEnWastePile));
     }
 }

@@ -24,9 +24,9 @@ public class TableroGUI {
             tablero.getChildren().add(tableu.obtenerTableu());
         }
 
-        tablero.setAlignment(Pos.TOP_LEFT);
+        tablero.setAlignment(Pos.TOP_CENTER);
         tablero.setFillHeight(false);
-        tablero.setPadding(new Insets(10,10,10,10));
+        tablero.setPadding(new Insets(10,16,16,16));
     }
 
     public Pane getPane(int index){

@@ -66,9 +66,9 @@ public class SolitaireGame {
      */
     public boolean moveTableauToTableau(int tableauFuente, int tableauDestino) {
         boolean movimientoRealizado = false;
-        TableauDeck fuente = tableau.get(tableauFuente);
+        TableauDeck fuente = tableau.get(tableauFuente-1);
         if (!fuente.isEmpty()) {
-            TableauDeck destino = tableau.get(tableauDestino);
+            TableauDeck destino = tableau.get(tableauDestino-1);
 
             int valorQueDebeTenerLaCartaInicialDeLaFuente;
             CartaInglesa cartaUltimaDelDestino;

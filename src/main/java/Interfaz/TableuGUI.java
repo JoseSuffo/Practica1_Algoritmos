@@ -17,7 +17,7 @@ public class TableuGUI {
         anchoCarta = 50;
         altoCarta = 100;
 
-        tableu.setPrefSize(anchoCarta, altoCarta+6*15);
+        tableu.setPrefSize(anchoCarta, altoCarta+6*30);
         tableu.setMinWidth(anchoCarta);
         tableu.setMaxWidth(anchoCarta);
         tableu.setMinSize(anchoCarta, altoCarta);
@@ -38,16 +38,16 @@ public class TableuGUI {
             cartaPane.setTranslateY(y);
             stackCartas.getChildren().add(cartaPane);
             if(cartaPosicion){
-                y+=10;
+                y+=25;
             }else{
-                y+=15;
+                y+=30;
             }
 
             if (i == cartas.size() - 1 && !cartaPosicion){
                 stackCartas = cartaPane;
             }
         }
-
+        tableu.getChildren().add(stackCartas);
         return stackCartas;
     }
 

@@ -18,7 +18,7 @@ public class ControladorMenu {
         BorderPane ventana = new BorderPane();
         ControladorTablero controlador = new ControladorTablero(ventana);
 
-        Scene juego = new Scene(ventana, 900, 600);
+        Scene juego = new Scene(ventana, 800, 600);
         Stage stage = new Stage();
         stage.setScene(juego);
         stage.setResizable(false);

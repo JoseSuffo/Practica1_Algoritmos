@@ -5,20 +5,20 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 
 public class CartaGUI {
-    static CartaInglesa cartaInglesa;
+    CartaInglesa cartaInglesa;
     public CartaGUI(CartaInglesa carta) {
-        this.cartaInglesa = carta;
+        cartaInglesa = carta;
     }
 
-    public static StackPane getPane() {
+    public StackPane getPane() {
         ImageView imagenCarta = new ImageView(new Image(obtenerRuta()));
-        imagenCarta.setFitWidth(100);
-        imagenCarta.setPreserveRatio(true);
-        StackPane pane = new StackPane(imagenCarta);
-        return pane;
+        imagenCarta.setFitWidth(50);
+        imagenCarta.setFitHeight(100);
+        imagenCarta.setPreserveRatio(false);
+        return new StackPane(imagenCarta);
     }
 
-    public static String obtenerRuta() {
+    public String obtenerRuta() {
         if (!isFaceup()) {
             return "/ImagenesCartas/cartaVolteada.png";
         }
@@ -34,15 +34,19 @@ public class CartaGUI {
         return "/ImagenesCartas/" + nombreArchivo;
     }
 
-    public static boolean isFaceup() {
+    public boolean isFaceup() {
         return cartaInglesa.isFaceup();
     }
 
-    public static Palo getPalo() {
+    public Palo getPalo() {
         return cartaInglesa.getPalo();
     }
 
-    public static int getValor() {
+    public int getValor() {
         return cartaInglesa.getValor();
+    }
+
+    public void voltearCarta() {
+        cartaInglesa.makeFaceDown();
     }
 }
