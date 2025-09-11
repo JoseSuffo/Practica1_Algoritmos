@@ -250,5 +250,7 @@ public class SolitaireGame {
         return str.toString();
     }
 
-
+    public FoundationDeck obtenerFoundation(int index) {
+        return foundation.get(index);
+    }
 }

@@ -1,189 +1,284 @@
 package Interfaz;
 
+import DeckOfCards.Carta;
+import DeckOfCards.CartaGUI;
 import DeckOfCards.CartaInglesa;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
+import DeckOfCards.Palo;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.input.MouseButton;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import solitaire.DrawPile;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 import solitaire.SolitaireGame;
-import solitaire.TableauDeck;
 
-import java.io.InputStream;
-import java.util.ArrayList;
+import java.util.Optional;
 
 public class ControladorTablero {
-    @FXML private ImageView wastePile;
-    @FXML private ImageView drawPile;
-    @FXML private Pane foundation1;
-    @FXML private Pane foundation2;
-    @FXML private Pane foundation3;
-    @FXML private Pane foundation4;
-    @FXML private StackPane tableu1;
-    @FXML private StackPane tableu2;
-    @FXML private StackPane tableu3;
-    @FXML private StackPane tableu4;
-    @FXML private StackPane tableu5;
-    @FXML private StackPane tableu6;
-    @FXML private StackPane tableu7;
-    @FXML private Button botonMover1;
-    @FXML private Button botonMover2;
-    @FXML private Button botonMover3;
-    @FXML private Button botonMover4;
-    @FXML private Button botonMover5;
-    @FXML private Button botonMover6;
-    @FXML private Button botonMover7;
-    @FXML private Button botonMover8;
-    @FXML private Button botonMover9;
-    @FXML private Button botonMover10;
-    @FXML private Button botonMover11;
-    @FXML private Button botonTomar;
-    @FXML private Button botonRegresar;
+    SolitaireGame juegoSolitario = new SolitaireGame();
 
-    private final ArrayList<TableauDeck> tableauDecks = new ArrayList<>();
-    private final ArrayList<StackPane> vistasTableau = new ArrayList<>();
-    private SolitaireGame juego;
-    private Integer origenSeleccionado;
+    boolean seSeleccionoCarta;
+    String seleccionOrigen;
+    int tableuSeleccionado;
+    StackPane cartaSeleccionada;
 
-    public void renderizarMonton(StackPane destino, ArrayList<CartaInglesa> cartas) {
-        destino.getChildren().clear();
+    BorderPane ventana;
+    VBox seccionIzquierda = new VBox(10);
+    VBox seccionDerecha = new VBox(10);
+    HBox seccionInferior = new HBox(16);
+    HBox seccionSuperior = new HBox(16);
+    StackPane drawPile = new StackPane();
+    StackPane wastePile = new StackPane();
+    StackPane[] foundations = new StackPane[4];
 
-        for (int i = 0; i < cartas.size(); i++) {
-            CartaInglesa carta = cartas.get(i);
-            Image imagenCarta;
+    Button salir = new Button("Salir");
+    Button reiniciarJuego = new Button("Reiniciar Juego");
+    Button reiniciarMazo = new Button("Reiniciar Mazo");
 
-            imagenCarta = new Image(getClass().getResourceAsStream(carta.obtenerRuta()));
+    TableroGUI tableroGUI;
 
-            ImageView vistaCarta = new ImageView(imagenCarta);
-            vistaCarta.setFitWidth(80);
-            vistaCarta.setPreserveRatio(true);
-
-            vistaCarta.setTranslateY(i * 25);
-
-            destino.getChildren().add(vistaCarta);
-        }
+    public ControladorTablero(BorderPane ventana) {
+        seSeleccionoCarta = false;
+        seleccionOrigen = "";
+        tableuSeleccionado = -1;
+        cartaSeleccionada = new StackPane();
+        this.ventana = ventana;
+        tableroGUI = new TableroGUI();
+        crearGUI();
+        actualizarGUI();
     }
 
-    public void inicializarJuego(DrawPile drawPile) {
-        juego = new SolitaireGame();
-        inicializarBotones();
-
-        // Asociar los StackPane del FXML
-        vistasTableau.clear();
-        vistasTableau.add(tableu1);
-        vistasTableau.add(tableu2);
-        vistasTableau.add(tableu3);
-        vistasTableau.add(tableu4);
-        vistasTableau.add(tableu5);
-        vistasTableau.add(tableu6);
-        vistasTableau.add(tableu7);
-
-        tableauDecks.clear();
-
-        for (int i = 0; i < 7; i++) {
-            TableauDeck tableauDeck = new TableauDeck();
-            tableauDeck.inicializar(drawPile.getCartas(i + 1)); // Asignar i+1 cartas
-            tableauDecks.add(tableauDeck);
-
-            // Renderizar en la vista
-            renderizarMonton(vistasTableau.get(i), tableauDeck.getCards());
-        }
+    public void actualizarGUI(){
+        generarTablero();
+        generarFoundations();
     }
 
-    @FXML
-    public void actualizarWastePile() {
-        if (juego == null || juego.getWastePile() == null) return;
+    public void generarTablero(){
+        StackPane[] tableus = tableroGUI.dibujar(juegoSolitario.getTableau());
 
-        CartaInglesa carta = juego.getWastePile().verCarta(); // no la remueve
-        if (carta != null) {
-            InputStream stream = getClass().getResourceAsStream(carta.obtenerRuta());
-            if (stream == null) {
-                stream = getClass().getResourceAsStream("/ImagenesCartas/cartaVolteada.png");
+        for(int i=0; i<tableus.length; i++){
+            final int index = i+1;
+            StackPane carta = tableus[i];
+            if(carta==null){
+                continue;
             }
-            wastePile.setImage(new Image(stream));
-        } else {
-            InputStream stream = getClass().getResourceAsStream("/ImagenesCartas/cartaVolteada.png");
-            if (stream != null) {
-                wastePile.setImage(new Image(stream));
-            } else {
-                wastePile.setImage(null);
+            carta.setCursor(Cursor.HAND);
+
+            carta.setOnMouseClicked(event -> {
+               if(event.getButton() != MouseButton.PRIMARY){
+                   return;
+               }
+               seleccionarColumna(index);
+               event.consume();
+            });
+        }
+    }
+
+    public void generarFoundations(){
+        for(int i=0; i<foundations.length; i++){
+            StackPane carta = foundations[i];
+            carta.getChildren().removeIf(n -> n.getUserData() != null);
+            var foundation = juegoSolitario.obtenerFoundation(i);
+            if(foundation == null){
+                continue;
+            }
+            CartaInglesa cartaInglesa = foundation.getUltimaCarta();
+            if(cartaInglesa != null){
+                CartaGUI cardGUI = new  CartaGUI(cartaInglesa);
+                StackPane card = cardGUI.getPane();
+                card.setUserData("carta");
+                carta.getChildren().add(card);
             }
         }
     }
 
-    @FXML
-    public void actualizarDrawPile() {
-        if (juego.getDrawPile().hayCartas()) {
-            InputStream stream = getClass().getResourceAsStream("/ImagenesCartas/cartaVolteada.png");
-            drawPile.setImage(new Image(stream));
-        } else {
-            drawPile.setImage(null);
+    public void generarDrawPile(){
+        drawPile.getChildren().removeIf(n -> n.getUserData() != null);
+        if(juegoSolitario.getDrawPile().hayCartas()){
+            StackPane carta = CartaGUI.getPane();
+            carta.setUserData("carta");
+            drawPile.getChildren().add(carta);
         }
     }
 
-    @FXML
-    public void inicializarBotones(){
-        botonMover5.setUserData(0);
-        botonMover6.setUserData(1);
-        botonMover7.setUserData(2);
-        botonMover8.setUserData(3);
-        botonMover9.setUserData(4);
-        botonMover10.setUserData(5);
-        botonMover11.setUserData(6);
-        botonMover1.setUserData(7);
-        botonMover2.setUserData(8);
-        botonMover3.setUserData(9);
-        botonMover4.setUserData(10);
+    public void generarWastePile(){
+        wastePile.getChildren().removeIf(n -> n.getUserData() != null);
+        if(juegoSolitario.getWastePile().hayCartas()){
+            CartaInglesa cartaSup = juegoSolitario.getWastePile().verCarta();
+            StackPane card = CartaGUI.getPane();
+            card.setUserData("carta");
+
+            card.setOnMouseClicked(event -> {
+               if(event.getButton() != MouseButton.PRIMARY){
+                   return;
+               }
+               if(seSeleccionoCarta){
+                   return;
+               }
+
+            });
+        }
     }
 
-    @FXML
-    public void botonTomar(){
-        juego.drawCards();
-        actualizarWastePile();
-        actualizarDrawPile();
+    public void generarEspacioTableu(StackPane tableu, String nombre){
+        tableu.setPrefSize(50,100);
+        Rectangle rectangle = new Rectangle(50,100);
+        rectangle.setArcHeight(5);
+        rectangle.setArcWidth(5);
+        rectangle.setFill(Color.color(1, 0, 0, 0.12));
+        rectangle.setStroke(Color.color(1, 0, 0, 0.35));
+        rectangle.setStrokeWidth(1.5);
+        tableu.getChildren().add(rectangle);
+
+        Label nombreSeccion = new Label(nombre);
+        nombreSeccion.setTextFill(Color.WHITE);
+        StackPane.setAlignment(nombreSeccion, Pos.TOP_LEFT);
+        StackPane.setMargin(nombreSeccion, new Insets(4, 0, 0, 6));
+        tableu.getChildren().add(nombreSeccion);
+
+        tableu.setCursor(Cursor.HAND);
     }
 
-    @FXML
-    public void moverDesdeTableau(ActionEvent event) {
-        Button boton = (Button) event.getSource();
-        int index = (int) boton.getUserData();
+    public void crearGUI(){
+        ventana.setStyle("-fx-background-color: linear-gradient(from 0% 50% to 100% 50%, rgba(12,89,2,1) 0%, rgba(31,148,80,1) 50%, rgba(12,89,2,1) 100%);");
 
-        System.out.println("Index: " + index);
+        seccionIzquierda.setPadding(new Insets(16));
+        seccionIzquierda.setAlignment(Pos.TOP_LEFT);
+        seccionIzquierda.setFillWidth(false);
 
-        if (origenSeleccionado == null) {
-            origenSeleccionado = index;
-            boton.setStyle("-fx-background-color: #808080");
-        } else {
-            if (juego.moveTableauToTableau(origenSeleccionado, index)) {
-                renderizarMonton(vistasTableau.get(origenSeleccionado), tableauDecks.get(origenSeleccionado).getCards());
-                renderizarMonton(vistasTableau.get(index), tableauDecks.get(index).getCards());
-            }else {
-                Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-                alerta.setTitle("Movimiento no válido");
-                alerta.setHeaderText("ERROR DE MOVIMIENTO");
-                alerta.setContentText("No puedes mover esa carta al lugar elegido. Intenta nuevamente.");
-                alerta.showAndWait();
+        seccionDerecha.setPadding(new Insets(16));
+        seccionDerecha.setAlignment(Pos.BOTTOM_CENTER);
+        seccionDerecha.setFillWidth(false);
+
+        seccionInferior.setPadding(new Insets(16));
+        seccionInferior.setAlignment(Pos.CENTER);
+        seccionInferior.setFillHeight(false);
+
+        seccionSuperior.setPadding(new Insets(16));
+        seccionSuperior.setAlignment(Pos.CENTER);
+        seccionSuperior.setFillHeight(false);
+
+        generarEspacioTableu(drawPile, "Draw Pile");
+        generarEspacioTableu(wastePile, "Waste Pile");
+
+        drawPile.setOnMouseClicked(event -> {
+            if(event.getButton() == MouseButton.PRIMARY){
+                if(juegoSolitario.getDrawPile().hayCartas()){
+                    juegoSolitario.drawCards();
+
+                    actualizarGUI();
+                }
             }
-            origenSeleccionado = null;
-            resetearCoLoresBotones();
+        });
+
+        salir.setOnAction(event -> {
+            Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmacion.setTitle("Salir");
+            confirmacion.setHeaderText("Confirmación de salida");
+            confirmacion.setContentText("¿Estás seguro de salir?");
+            Optional<ButtonType> resultado = confirmacion.showAndWait();
+            if(resultado.get() == ButtonType.OK){
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                stage.close();
+            }
+        });
+
+        reiniciarJuego.setOnAction(event -> {
+
+        });
+
+        reiniciarMazo.setOnAction(event -> {
+
+        });
+
+        for(int i=0; i<foundations.length; i++){
+            foundations[i] = new StackPane();
+            generarEspacioTableu(foundations[i], Palo.values()[i].getFigura());
+
+            foundations[i].setOnMouseClicked(event -> {
+                if(event.getButton() != MouseButton.PRIMARY) {
+                    return;
+                }
+                if(!seSeleccionoCarta){
+                    return;
+                }
+                boolean seMovioCarta = false;
+                switch(seleccionOrigen){
+                    case "WASTE PILE":
+                        seMovioCarta = juegoSolitario.moveWasteToFoundation();
+                        break;
+                    case "TABLEU":
+                        seMovioCarta = juegoSolitario.moveTableauToFoundation(tableuSeleccionado);
+                        break;
+                }
+                actualizarSeleccion();
+                if(seMovioCarta){
+                    actualizarGUI();
+                }
+
+
+            });
+        }
+
+        seccionIzquierda.getChildren().addAll(wastePile, drawPile, reiniciarMazo);
+        seccionDerecha.getChildren().addAll(foundations[0], foundations[1]
+        , foundations[2], foundations[3]);
+        seccionSuperior.getChildren().addAll();
+        seccionInferior.getChildren().addAll(salir, reiniciarJuego);
+
+        ventana.setTop(seccionSuperior);
+        ventana.setBottom(seccionInferior);
+        ventana.setLeft(seccionIzquierda);
+        ventana.setRight(seccionDerecha);
+        ventana.setCenter(tableroGUI.getHBox());
+
+        for(int i=0; i<7; i++){
+            final int index = i+1;
+            var tableu = tableroGUI.getPane(i);
+            tableu.setOnMouseClicked(event -> {
+                if(event.getButton() != MouseButton.PRIMARY){
+                    return;
+                }
+                seleccionarColumna(index);
+            });
+            tableu.setCursor(Cursor.HAND);
         }
     }
 
-    public void resetearCoLoresBotones() {
-        botonMover1.setStyle("");
-        botonMover2.setStyle("");
-        botonMover3.setStyle("");
-        botonMover4.setStyle("");
-        botonMover5.setStyle("");
-        botonMover6.setStyle("");
-        botonMover7.setStyle("");
-        botonMover8.setStyle("");
-        botonMover9.setStyle("");
-        botonMover10.setStyle("");
-        botonMover11.setStyle("");
+    public void seleccionarColumna(int index){
+        if(!seSeleccionoCarta){
+            tableuSeleccionado = index;
+            seSeleccionoCarta = true;
+            seleccionOrigen = "TABLEU";
+        }else{
+            boolean seMovioCarta = false;
+            if("WASTE PILE".equals(seleccionOrigen)){
+                seMovioCarta = juegoSolitario.moveWasteToTableau(index);
+            }else if("TABLEU".equals(seleccionOrigen)){
+                seMovioCarta = juegoSolitario.moveTableauToTableau(tableuSeleccionado, index);
+            }else{
+                actualizarSeleccion();
+            }
+            actualizarSeleccion();
+            if(seMovioCarta){
+                actualizarGUI();
+            }
+        }
+    }
+
+    public void actualizarSeleccion(){
+        seSeleccionoCarta = false;
+        seleccionOrigen = "";
+        tableuSeleccionado = -1;
     }
 }
