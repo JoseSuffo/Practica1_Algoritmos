@@ -5,11 +5,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 
 public class CartaGUI {
+    //Atributo de la clase CartaGUI
     CartaInglesa cartaInglesa;
+
+    //Constructor de la clase CartaGUI
     public CartaGUI(CartaInglesa carta) {
-        cartaInglesa = carta;
+        this.cartaInglesa = carta;
     }
 
+    //Metodo que crea una imagen en base a una ruta de la carta para regresarla como StackPane
     public StackPane getPane() {
         ImageView imagenCarta = new ImageView(new Image(obtenerRuta()));
         imagenCarta.setFitWidth(50);
@@ -18,6 +22,8 @@ public class CartaGUI {
         return new StackPane(imagenCarta);
     }
 
+    /*Metodo que regresa la ruta de una carta en base a su valor y palo, si esta volteada
+    regresa la ruta correspondiente a la carta volteada*/
     public String obtenerRuta() {
         if (!isFaceup()) {
             return "/ImagenesCartas/cartaVolteada.png";
@@ -34,6 +40,7 @@ public class CartaGUI {
         return "/ImagenesCartas/" + nombreArchivo;
     }
 
+    //Getter de los valores de la carta inglesa recibida
     public boolean isFaceup() {
         return cartaInglesa.isFaceup();
     }

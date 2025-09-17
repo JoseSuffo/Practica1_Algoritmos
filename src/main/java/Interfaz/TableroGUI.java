@@ -10,13 +10,11 @@ import solitaire.TableauDeck;
 import java.util.ArrayList;
 
 public class TableroGUI {
+    //Atributos
     public HBox tablero = new HBox(16);
     public TableuGUI[] tableaus = new TableuGUI[7];
 
-    public HBox getHBox() {
-        return tablero;
-    }
-
+    //Constructor de la clase TableroGUI
     public TableroGUI() {
         for(int i = 0; i < tableaus.length; i++){
             TableuGUI tableu = new TableuGUI();
@@ -29,10 +27,12 @@ public class TableroGUI {
         tablero.setPadding(new Insets(10,16,16,16));
     }
 
+    //Metodo que regresa un tableu en especifico del tablero
     public Pane getPane(int index){
         return tableaus[index].obtenerTableu();
     }
 
+    //Metodo que dibuja todos los tableus en GUI y los regresa como un ArrayList de StackPane
     public StackPane[] dibujar(ArrayList<TableauDeck> tableau){
         StackPane[] pane = new StackPane[7];
         for(int i = 0; i < 7 && i < tableau.size(); i++){
@@ -40,5 +40,10 @@ public class TableroGUI {
             pane[i] = tableaus[i].getTableu(cartas.getCards());
         }
         return pane;
+    }
+
+    //Metodo que regresa todo el tablero de juego
+    public HBox getHBox() {
+        return tablero;
     }
 }

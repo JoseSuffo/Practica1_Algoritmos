@@ -3,16 +3,17 @@ package Interfaz;
 import DeckOfCards.CartaGUI;
 import DeckOfCards.CartaInglesa;
 import javafx.scene.Cursor;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 import java.util.ArrayList;
 
 public class TableuGUI {
+    //Atributos de la clase TableuGUI
     public Pane tableu = new Pane();
     public double anchoCarta, altoCarta;
+
+    //Constructor de la clase TableuGUI
     public TableuGUI(){
         anchoCarta = 50;
         altoCarta = 100;
@@ -25,6 +26,8 @@ public class TableuGUI {
         tableu.setCursor(Cursor.HAND);
     }
 
+    //Metodo que se encarga de regresar la interfaz gráfica de las cartas en un StackPane
+    //Recibe como argumento un arraylist de CartaInglesa para poder generar así su imagen
     public StackPane getTableu(ArrayList<CartaInglesa> cartas){
         tableu.getChildren().clear();
         int y=0;
@@ -51,6 +54,7 @@ public class TableuGUI {
         return stackCartas;
     }
 
+    //Este metodo nos regresa un solo tableu en su versión de Pane
     public Pane obtenerTableu(){
         return tableu;
     }
