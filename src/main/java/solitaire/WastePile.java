@@ -18,16 +18,6 @@ public class WastePile {
         cartas = new Pila<CartaInglesa>(1000);
     }
 
-//    public void addCartas(Pila<CartaInglesa> nuevas) {
-//        int cantidad = nuevas.getTamaño();
-//        for (int i = 0; i < cantidad; i++) {
-//            CartaInglesa carta = nuevas.pop();
-//            if (carta != null) {
-//                cartas.push(carta);
-//            }
-//        }
-//    }
-
     public void addCartas(Pila<CartaInglesa> nuevas) {
         while (!nuevas.pilaVacia()) {
             CartaInglesa carta = nuevas.pop();
@@ -37,7 +27,6 @@ public class WastePile {
         }
     }
 
-
     public Pila<CartaInglesa> emptyPile() {
         Pila<CartaInglesa> pile = new Pila<CartaInglesa>(1000);
         while (!cartas.pilaVacia()) {
@@ -46,7 +35,6 @@ public class WastePile {
         cartas = new Pila<CartaInglesa>(1000);
         return pile;
     }
-
 
     /**
      * Obtener la última carta sin removerla.
@@ -67,20 +55,11 @@ public class WastePile {
         return regresar;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder stb = new StringBuilder();
-        if (cartas.pilaVacia()) {
-            stb.append("---");
-        } else {
-            CartaInglesa regresar = cartas.pop();
-            regresar.makeFaceUp();
-            stb.append(regresar.toString());
-        }
-        return stb.toString();
-    }
-
     public boolean hayCartas() {
         return !cartas.pilaVacia();
+    }
+
+    public int getTamaño(){
+        return cartas.getTamaño();
     }
 }

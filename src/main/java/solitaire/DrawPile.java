@@ -11,19 +11,19 @@ import java.util.ArrayList;
  * @version 2025
  */
 public class DrawPile {
-//    private ArrayList<CartaInglesa> cartas;
+    //    private ArrayList<CartaInglesa> cartas;
     private Pila<CartaInglesa> cartas;
     private int cuantasCartasSeEntregan = 3;
 
-    public DrawPile() {
-        DeckOfCards.Mazo mazo = new DeckOfCards.Mazo();
-        cartas = mazo.getCartas();
+    public DrawPile(Pila<CartaInglesa> cartasPila) {
+        cartas = cartasPila;
         setCuantasCartasSeEntregan(3);
     }
 
     /**
      * Establece cuantas cartas se sacan cada vez.
      * Puede ser 1 o 3 normalmente.
+     *
      * @param cuantasCartasSeEntregan
      */
     public void setCuantasCartasSeEntregan(int cuantasCartasSeEntregan) {
@@ -32,6 +32,7 @@ public class DrawPile {
 
     /**
      * Regresa la cantidad de cartas que se sacan cada vez.
+     *
      * @return cantidad de cartas que se entregan
      */
     public int getCuantasCartasSeEntregan() {
@@ -43,6 +44,7 @@ public class DrawPile {
      * de una partida para cargar las cartas de los tableaus.
      * Si se tratan de remover más cartas de las que hay,
      * se provocará un error.
+     *
      * @param cantidad de cartas que se quieren a retirar
      * @return cartas retiradas
      */
@@ -61,24 +63,9 @@ public class DrawPile {
      * que se configuró inicialmente.
      * @return Cartas retiradas.
      */
-//    public ArrayList<CartaInglesa> retirarCartas() {
-//        ArrayList<CartaInglesa> retiradas = new ArrayList<>();
-//        //int maximoARetirar = cartas.size() < cuantasCartasSeEntregan ? cartas.size() : cuantasCartasSeEntregan;
-//
-//        int maximoARetirar = Math.min(cartas.getTamaño(), cuantasCartasSeEntregan);
-//
-//        for (int i = 0; i < maximoARetirar; i++) {
-//            //CartaInglesa retirada = cartas.remove(0);
-//            CartaInglesa retirada = cartas.pop();
-//            retirada.makeFaceUp();
-//            retiradas.add(retirada);
-//        }
-//        return retiradas;
-//    }
-
     public Pila<CartaInglesa> retirarCartas(){
         Pila<CartaInglesa> retiradas = new Pila<CartaInglesa>(1000);
-        int maximoARetirar = Math.min(cartas.getTamaño(), cuantasCartasSeEntregan);
+        int maximoARetirar = cartas.getTamaño() < cuantasCartasSeEntregan ? cartas.getTamaño() : cuantasCartasSeEntregan;
         for (int i = 0; i < maximoARetirar; i++) {
             CartaInglesa retirada = cartas.pop();
             if (retirada != null) {
@@ -109,13 +96,6 @@ public class DrawPile {
      * para que no se vean las caras.
      * @param cartasAgregar cartas que se agregan
      */
-//    public void recargar(ArrayList<CartaInglesa> cartasAgregar) {
-//        cartas = cartasAgregar;
-//        for (CartaInglesa aCarta : cartas) {
-//            aCarta.makeFaceDown();
-//        }
-//
-
     public void recargar(Pila<CartaInglesa> cartasAgregar) {
         cartas = new Pila<CartaInglesa>(1000);
 
@@ -133,14 +113,7 @@ public class DrawPile {
         }
     }
 
-
-
-
-    @Override
-    public String toString() {
-        if (cartas.pilaVacia()) {
-            return "-E-";
-        }
-        return "@";
+    public int getTamaño(){
+        return cartas.getTamaño();
     }
 }

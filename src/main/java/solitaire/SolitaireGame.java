@@ -19,7 +19,8 @@ public class SolitaireGame {
     WastePile wastePile;
 
     public SolitaireGame() {
-        drawPile = new DrawPile();
+        DeckOfCards.Mazo mazo = new DeckOfCards.Mazo();
+        drawPile = new DrawPile(mazo.getCartas());
         wastePile = new WastePile();
         createTableaux();
         createFoundations();
@@ -36,12 +37,13 @@ public class SolitaireGame {
         drawCards();
     }
 
-
     /**
      * Move cards from Draw pile to Waste Pile.
      */
     public void drawCards() {
+        System.out.println("Antes de retirar: " + drawPile.getTamaño());
         Pila<CartaInglesa> cards = drawPile.retirarCartas();
+        System.out.println("Después de retirar: " + drawPile.getTamaño());
         wastePile.addCartas(cards);
     }
 
@@ -226,32 +228,6 @@ public class SolitaireGame {
 
     public FoundationDeck getLastFoundationUpdated() {
         return lastFoundationUpdated;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder str = new StringBuilder();
-        // add foundations
-        str.append("Foundation\n");
-        for (FoundationDeck foundationDeck : foundation) {
-            str.append(foundationDeck);
-            str.append("\n");
-        }
-
-        // add tableaux
-        str.append("\nTableaux\n");
-        int tableauNumber = 1;
-        for (TableauDeck tableauDeck : tableau) {
-            str.append(tableauNumber + " ");
-            str.append(tableauDeck);
-            str.append("\n");
-            tableauNumber++;
-        }
-        str.append("Waste\n");
-        str.append(wastePile);
-        str.append("\nDraw\n");
-        str.append(drawPile);
-        return str.toString();
     }
 
     public FoundationDeck obtenerFoundation(int index) {
