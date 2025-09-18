@@ -11,7 +11,6 @@ import java.util.ArrayList;
  * @version 2025
  */
 public class DrawPile {
-    //    private ArrayList<CartaInglesa> cartas;
     private Pila<CartaInglesa> cartas;
     private int cuantasCartasSeEntregan = 3;
 
@@ -115,5 +114,16 @@ public class DrawPile {
 
     public int getTamaño(){
         return cartas.getTamaño();
+    }
+
+    public Pila<CartaInglesa> getCartas() {
+        return cartas;
+    }
+
+    public void setCartas(ArrayList<CartaInglesa> cartasAnteriores){
+        cartas = new Pila<CartaInglesa>(1000);
+        for (CartaInglesa carta : cartasAnteriores) {
+            cartas.push(carta);
+        }
     }
 }

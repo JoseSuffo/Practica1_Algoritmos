@@ -49,7 +49,7 @@ public class ControladorTablero {
     TableroGUI tableroGUI;
 
     //Creación de la pila que almacenará los movimientos
-    Pila<MovimientoRealizado> movimientosRealizados = new Pila<MovimientoRealizado>(1000);
+    private Pila<TableroActual> historial = new Pila<TableroActual>(1000);
 
     //Constructor de la clase Controlador Tablero
     public ControladorTablero(BorderPane ventana) {
@@ -200,6 +200,8 @@ public class ControladorTablero {
         generarEspacioTablero(wastePile, "Waste Pile");
 
         drawPile.setOnMouseClicked(event -> {
+            historial.push(new TableroActual(juegoSolitario));
+
             if (juegoSolitario.getDrawPile().hayCartas()) {
                 juegoSolitario.drawCards();
             } else if (juegoSolitario.getWastePile().hayCartas()) {
@@ -210,8 +212,16 @@ public class ControladorTablero {
             actualizarGUI();
         });
 
-        deshacerAccion.setOnAction(event -> {
-
+        deshacerAccion.setOnAction(e -> {
+            if (!historial.pilaVacia()) {
+                TableroActual estadoAnterior = historial.pop();
+                juegoSolitario.restaurarEstado(estadoAnterior);
+                System.out.println("Estado restaurado:");
+                for (int i = 0; i < juegoSolitario.getTableau().size(); i++) {
+                    System.out.println("Tableau " + i + ": " + juegoSolitario.getTableau().get(i));
+                }
+                actualizarGUI();
+            }
         });
         deshacerAccion.setStyle("-fx-background-color: linear-gradient(to bottom, #90CAF9, #1976D2);\n");
         deshacerAccion.setTextFill(Color.WHITE);
@@ -246,6 +256,7 @@ public class ControladorTablero {
                 juegoSolitario = new SolitaireGame();
                 reiniciarSeleccion();
                 actualizarGUI();
+                historial.clear();
             }else if(resultado.get() == ButtonType.CANCEL){
                 Alert mensaje = new Alert(Alert.AlertType.INFORMATION);
                 mensaje.setTitle("El juego sigue");
@@ -262,6 +273,7 @@ public class ControladorTablero {
             reiniciarSeleccion();
             actualizarGUI();
         });
+
         Image image = new Image(getClass().getResourceAsStream("/botonReciclar.png"));
         ImageView imageView = new ImageView(image);
         imageView.setFitHeight(50);
@@ -290,10 +302,9 @@ public class ControladorTablero {
                 }
                 reiniciarSeleccion();
                 if(seMovioCarta){
+                    historial.push(new TableroActual(juegoSolitario));
                     actualizarGUI();
-                    MovimientoRealizado movimiento = new MovimientoRealizado(seccionIzquierda, seccionDerecha, seccionInferior,
-                            seccionSuperior, drawPile, wastePile, foundations, tableroGUI);
-                    movimientosRealizados.push(movimiento);
+                    verificarFinDeJuego();
                 }
             });
         }
@@ -340,11 +351,10 @@ public class ControladorTablero {
                 reiniciarSeleccion();
             }
             reiniciarSeleccion();
-            if(seMovioCarta){
+            if(seMovioCarta) {
+                historial.push(new TableroActual(juegoSolitario));
                 actualizarGUI();
-                MovimientoRealizado movimiento = new MovimientoRealizado(seccionIzquierda, seccionDerecha, seccionInferior,
-                        seccionSuperior, drawPile, wastePile, foundations, tableroGUI);
-                movimientosRealizados.push(movimiento);
+                verificarFinDeJuego();
             }
         }
     }
@@ -369,5 +379,19 @@ public class ControladorTablero {
         System.out.println("DrawPile tamaño: " + juegoSolitario.getDrawPile().getTamaño());
         System.out.println("WastePile tamaño: " + juegoSolitario.getWastePile().getTamaño());
         System.out.println("Botón reciclaje habilitado: " + !reiniciarMazo.isDisabled());
+    }
+
+    public void verificarFinDeJuego(){
+        if(juegoSolitario.isGameOver()){
+            Alert ganador = new  Alert(Alert.AlertType.INFORMATION);
+            ganador.setTitle("Fin del Juego");
+            ganador.setHeaderText("¡¡HAS GANADO!!");
+            ganador.setContentText("El juego ha terminado, comenzará uno nuevo");
+            ganador.showAndWait();
+            juegoSolitario = new SolitaireGame();
+            reiniciarSeleccion();
+            actualizarGUI();
+            historial.clear();
+        }
     }
 }

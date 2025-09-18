@@ -22,7 +22,6 @@ public class TableauDeck {
      */
     public void inicializar(ArrayList<CartaInglesa> cartas) {
         this.cartas = cartas;
-        // voltear la última carta recibida
         CartaInglesa ultima = cartas.getLast();
         ultima.makeFaceUp();
     }
@@ -34,31 +33,55 @@ public class TableauDeck {
      * @return removed cards or empty ArrayList if it is not possible to remove.
      */
     public ArrayList<CartaInglesa> removeStartingAt(int value) {
-        ArrayList<CartaInglesa> removed = new ArrayList<>();
-        Iterator<CartaInglesa> iterator = cartas.iterator();
-        while (iterator.hasNext()) {
-            CartaInglesa next = iterator.next();
-            if (next.isFaceup()) {
-                if (next.getValor() <= value) {
-                    removed.add(next);
-                    iterator.remove();
-                }
+        ArrayList<CartaInglesa> bloque = new ArrayList<>();
+        int inicio = -1;
+        for (int i = 0; i < cartas.size(); i++) {
+            CartaInglesa carta = cartas.get(i);
+            if (carta.isFaceup() && carta.getValor() == value) {
+                inicio = i;
+                break;
             }
         }
-        return removed;
+        if (inicio == -1) return bloque;
+        bloque.add(cartas.get(inicio));
+        for (int i = inicio + 1; i < cartas.size(); i++) {
+            CartaInglesa anterior = bloque.getLast();
+            CartaInglesa actual = cartas.get(i);
+
+            if (!actual.isFaceup()) break;
+            if (actual.getValor() == anterior.getValor() - 1 &&
+                    !actual.getColor().equals(anterior.getColor())) {
+                bloque.add(actual);
+            } else {
+                break;
+            }
+        }
+
+        if (!bloque.isEmpty()) {
+            cartas.subList(inicio, inicio + bloque.size()).clear();
+            if (!cartas.isEmpty()) {
+                cartas.getLast().makeFaceUp();
+            }
+        }
+
+        return bloque;
     }
 
+
     public CartaInglesa viewCardStartingAt(int value) {
-        CartaInglesa cartaConElValorDeseado = null;
-        for (CartaInglesa next : cartas) {
-            if (next.isFaceup()) {
-                if (next.getValor() <= value) {
-                    cartaConElValorDeseado = next;
-                    break;
+        for (int i = 0; i < cartas.size(); i++) {
+            CartaInglesa carta = cartas.get(i);
+            if (carta.isFaceup() && carta.getValor() == value) {
+                if (i == cartas.size() - 1 || (
+                        cartas.get(i + 1).isFaceup() &&
+                                cartas.get(i + 1).getValor() == carta.getValor() - 1 &&
+                                !cartas.get(i + 1).getColor().equals(carta.getColor())
+                )) {
+                    return carta;
                 }
             }
         }
-        return cartaConElValorDeseado;
+        return null;
     }
 
     /**
@@ -104,7 +127,6 @@ public class TableauDeck {
             ultimaCarta = cartas.getLast();
             cartas.remove(ultimaCarta);
             if (!cartas.isEmpty()) {
-                // voltea la siguiente carta del tableau
                 cartas.getLast().makeFaceUp();
             }
         }
@@ -118,7 +140,7 @@ public class TableauDeck {
             builder.append("---");
         } else {
             for (CartaInglesa carta : cartas) {
-                builder.append(carta.toString());
+                builder.append(carta.toString()).append(carta.isFaceup() ? "↑" : "↓");
             }
         }
         return builder.toString();
@@ -136,10 +158,9 @@ public class TableauDeck {
 
         if (!cartasRecibidas.isEmpty()) {
             CartaInglesa primera = cartasRecibidas.getFirst();
-            // si la primera carta del bloque recibido se puede agregar al tableau actual
             if (sePuedeAgregarCarta(primera)) {
-                // se agrega todo el bloque
                 cartas.addAll(cartasRecibidas);
+                cartas.getLast().makeFaceUp();
                 resultado = true;
             }
         }
@@ -193,5 +214,10 @@ public class TableauDeck {
 
     public ArrayList<CartaInglesa> getCards() {
         return cartas;
+    }
+
+    public void setCards(ArrayList<CartaInglesa> cards) {
+        cartas = new ArrayList<>();
+        cartas.addAll(cards);
     }
 }

@@ -2,6 +2,7 @@ package solitaire;
 
 import DeckOfCards.CartaInglesa;
 import DeckOfCards.Palo;
+import Interfaz.TableroActual;
 import Pila.Pila;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
  */
 public class SolitaireGame {
     ArrayList<TableauDeck> tableau = new ArrayList<>();
-    ArrayList<FoundationDeck> foundation = new ArrayList<>();
+    public ArrayList<FoundationDeck> foundation = new ArrayList<>();
     FoundationDeck lastFoundationUpdated;
     DrawPile drawPile;
     WastePile wastePile;
@@ -33,7 +34,6 @@ public class SolitaireGame {
     public void reloadDrawPile() {
         Pila<CartaInglesa> cards = wastePile.emptyPile();
         drawPile.recargar(cards);
-
         drawCards();
     }
 
@@ -232,5 +232,18 @@ public class SolitaireGame {
 
     public FoundationDeck obtenerFoundation(int index) {
         return foundation.get(index);
+    }
+
+    public void restaurarEstado(TableroActual estado) {
+        if (estado.getTableau().size() != tableau.size()) return;
+        if (estado.getFoundation().size() != foundation.size()) return;
+        for (int i = 0; i < tableau.size(); i++) {
+            tableau.get(i).setCards(new ArrayList<>(estado.getTableau().get(i)));
+        }
+        for (int i = 0; i < foundation.size(); i++) {
+            foundation.get(i).setCartas(new ArrayList<>(estado.getFoundation().get(i)));
+        }
+        drawPile.setCartas(estado.getDrawPile());
+        wastePile.setCartas(estado.getWastePile());
     }
 }

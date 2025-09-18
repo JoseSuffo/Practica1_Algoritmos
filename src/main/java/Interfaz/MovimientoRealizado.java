@@ -1,5 +1,6 @@
 package Interfaz;
 
+import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -10,9 +11,11 @@ public class MovimientoRealizado {
     public StackPane drawPile, wastePile;
     public StackPane[] foundations;
     public TableroGUI tableroGUI;
+    public Button botonReiniciar;
 
     public MovimientoRealizado(VBox izquierda, VBox derecha, HBox inferior, HBox superior
-            , StackPane drawPile, StackPane wastePile, StackPane[] foundations, TableroGUI tableroGUI) {
+            , StackPane drawPile, StackPane wastePile, StackPane[] foundations, TableroGUI tableroGUI,
+                               Button botonReiniciar) {
         this.izquierda = izquierda;
         this.derecha = derecha;
         this.inferior = inferior;
@@ -21,6 +24,7 @@ public class MovimientoRealizado {
         this.wastePile = wastePile;
         this.foundations = foundations;
         this.tableroGUI = tableroGUI;
+        this.botonReiniciar = botonReiniciar;
     }
 
     public VBox getIzquierda() {
@@ -53,5 +57,9 @@ public class MovimientoRealizado {
 
     public TableroGUI getTableroGUI() {
         return tableroGUI;
+    }
+
+    public Button getBotonReiniciar() {
+        return botonReiniciar;
     }
 }

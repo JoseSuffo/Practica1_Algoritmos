@@ -1,5 +1,9 @@
 package Pila;
 
+import DeckOfCards.CartaInglesa;
+
+import java.util.ArrayList;
+
 public class Pila <T>{
     int tope, valorMaximo;
     T[] pila;
@@ -11,7 +15,7 @@ public class Pila <T>{
     }
 
     public boolean pilaLlena(){
-        return pila.length == valorMaximo-1;
+        return tope == valorMaximo-1;
     }
 
     public boolean pilaVacia(){
@@ -55,5 +59,23 @@ public class Pila <T>{
         while(!pilaVacia()){
             pop();
         }
+    }
+
+    public Pila<T> clonar() {
+        Pila<T> copia = new Pila<T>(valorMaximo);
+        for (int i = 0; i <= tope; i++) {
+            copia.pila[i] = pila[i]; // copia directa
+        }
+        copia.tope = this.tope;
+        return copia;
+    }
+
+
+    public ArrayList<T> toList() {
+        ArrayList<T> lista = new ArrayList<>();
+        for (int i = 0; i <= tope; i++) {
+            lista.add(pila[i]);
+        }
+        return lista;
     }
 }

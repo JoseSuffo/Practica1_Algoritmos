@@ -104,4 +104,12 @@ public class FoundationDeck {
         }
         return ultimaCarta;
     }
+
+    public ArrayList<CartaInglesa> getCartas() {
+        return cartas;
+    }
+
+    public void setCartas(ArrayList<CartaInglesa> cartas) {
+        this.cartas = new ArrayList<>(cartas);
+    }
 }

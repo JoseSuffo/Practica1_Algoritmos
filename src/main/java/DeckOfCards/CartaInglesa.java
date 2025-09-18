@@ -25,4 +25,15 @@ public class CartaInglesa extends Carta {
         // Ambas cartas tienen el distinto valor
         return getValor() - o.getValor();
     }
+
+    public CartaInglesa clonar() {
+        CartaInglesa copia = new CartaInglesa(getValor(), getPalo(), getColor());
+        if (isFaceup()) {
+            copia.makeFaceUp();
+        } else {
+            copia.makeFaceDown();
+        }
+        return copia;
+    }
+
 }

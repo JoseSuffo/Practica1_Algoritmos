@@ -30,26 +30,18 @@ public class TableuGUI {
     //Recibe como argumento un arraylist de CartaInglesa para poder generar así su imagen
     public StackPane getTableu(ArrayList<CartaInglesa> cartas){
         tableu.getChildren().clear();
-        int y=0;
+        int y = 0;
         StackPane stackCartas = new StackPane();
 
-        for(int i=0;i<cartas.size();i++){
-            CartaInglesa carta = cartas.get(i);
+        for (CartaInglesa carta : cartas) {
             CartaGUI cartaGUI = new CartaGUI(carta);
-            boolean cartaPosicion = cartaGUI.isFaceup();
             StackPane cartaPane = cartaGUI.getPane();
             cartaPane.setTranslateY(y);
+            cartaPane.setUserData("carta");
             stackCartas.getChildren().add(cartaPane);
-            if(cartaPosicion){
-                y+=25;
-            }else{
-                y+=30;
-            }
-
-            if (i == cartas.size() - 1 && !cartaPosicion){
-                stackCartas = cartaPane;
-            }
+            y += carta.isFaceup() ? 25 : 30;
         }
+
         tableu.getChildren().add(stackCartas);
         return stackCartas;
     }
