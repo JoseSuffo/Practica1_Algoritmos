@@ -48,6 +48,9 @@ public class ControladorTablero {
     Button deshacerAccion = new Button("Deshacer Accion (stand by)");
     TableroGUI tableroGUI;
 
+    //Creación de la pila que almacenará los movimientos
+    Pila<MovimientoRealizado> movimientosRealizados = new Pila<MovimientoRealizado>(1000);
+
     //Constructor de la clase Controlador Tablero
     public ControladorTablero(BorderPane ventana) {
         seSeleccionoCarta = false;
@@ -288,6 +291,9 @@ public class ControladorTablero {
                 reiniciarSeleccion();
                 if(seMovioCarta){
                     actualizarGUI();
+                    MovimientoRealizado movimiento = new MovimientoRealizado(seccionIzquierda, seccionDerecha, seccionInferior,
+                            seccionSuperior, drawPile, wastePile, foundations, tableroGUI);
+                    movimientosRealizados.push(movimiento);
                 }
             });
         }
@@ -336,6 +342,9 @@ public class ControladorTablero {
             reiniciarSeleccion();
             if(seMovioCarta){
                 actualizarGUI();
+                MovimientoRealizado movimiento = new MovimientoRealizado(seccionIzquierda, seccionDerecha, seccionInferior,
+                        seccionSuperior, drawPile, wastePile, foundations, tableroGUI);
+                movimientosRealizados.push(movimiento);
             }
         }
     }
