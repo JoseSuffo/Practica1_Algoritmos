@@ -56,4 +56,10 @@ public class Pila <T>{
             return pila[tope];
         }
     }
+
+    public void clear(){
+        while(!pilaVacia()){
+            pop();
+        }
+    }
 }

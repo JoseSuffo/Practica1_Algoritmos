@@ -49,17 +49,11 @@ public class Mazo {
 //    }
 
     private void mezclar() {
-        // Extraer todas las cartas de la pila interna
         ArrayList<CartaInglesa> cartasTemporales = new ArrayList<>();
-
         while (!cartas.pilaVacia()) {
             cartasTemporales.add(cartas.pop());
         }
-
-        // Mezclar las cartas
         Collections.shuffle(cartasTemporales);
-
-        // Insertar nuevamente en la pila (en orden inverso para mantener el tope correcto)
         for (int i = cartasTemporales.size() - 1; i >= 0; i--) {
             cartas.push(cartasTemporales.get(i));
         }
@@ -88,17 +82,11 @@ public class Mazo {
 //    }
 
     public void ordenar() {
-        // Extraer todas las cartas de la pila
         ArrayList<CartaInglesa> cartasTemporales = new ArrayList<>();
-
         while (!cartas.pilaVacia()) {
             cartasTemporales.add(cartas.pop());
         }
-
-        // Ordenar las cartas (requiere que CartaInglesa implemente Comparable)
         Collections.sort(cartasTemporales);
-
-        // Insertar nuevamente en la pila (en orden inverso para mantener el tope correcto)
         for (int i = cartasTemporales.size() - 1; i >= 0; i--) {
             cartas.push(cartasTemporales.get(i));
         }

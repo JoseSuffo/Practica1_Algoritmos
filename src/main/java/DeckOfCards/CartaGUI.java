@@ -54,6 +54,8 @@ public class CartaGUI {
     }
 
     public void voltearCarta() {
-        cartaInglesa.makeFaceDown();
+        if (cartaInglesa != null) {
+            cartaInglesa.makeFaceDown();
+        }
     }
 }

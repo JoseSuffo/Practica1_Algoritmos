@@ -79,11 +79,12 @@ public class DrawPile {
     public Pila<CartaInglesa> retirarCartas(){
         Pila<CartaInglesa> retiradas = new Pila<CartaInglesa>(1000);
         int maximoARetirar = Math.min(cartas.getTamaño(), cuantasCartasSeEntregan);
-
-        for(int i=0; i<maximoARetirar; i++){
+        for (int i = 0; i < maximoARetirar; i++) {
             CartaInglesa retirada = cartas.pop();
-            retirada.makeFaceUp();
-            retiradas.push(retirada);
+            if (retirada != null) {
+                retirada.makeFaceUp();
+                retiradas.push(retirada);
+            }
         }
         return retiradas;
     }
@@ -116,25 +117,23 @@ public class DrawPile {
 //
 
     public void recargar(Pila<CartaInglesa> cartasAgregar) {
-        // Vaciar la pila actual
-        while (!cartas.pilaVacia()) {
-            cartas.pop();
-        }
+        cartas = new Pila<CartaInglesa>(1000);
 
         Pila<CartaInglesa> temporal = new Pila<CartaInglesa>(cartasAgregar.getTamaño());
-
-        // Extraer de cartasAgregar y poner boca abajo
         while (!cartasAgregar.pilaVacia()) {
             CartaInglesa carta = cartasAgregar.pop();
-            carta.makeFaceDown();
-            temporal.push(carta);
+            if (carta != null) {
+                carta.makeFaceDown();
+                temporal.push(carta);
+            }
         }
 
-        // Restaurar el orden original en la pila destino
         while (!temporal.pilaVacia()) {
             cartas.push(temporal.pop());
         }
     }
+
+
 
 
     @Override

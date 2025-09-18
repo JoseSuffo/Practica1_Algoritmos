@@ -3,6 +3,7 @@ package Interfaz;
 import DeckOfCards.CartaGUI;
 import DeckOfCards.CartaInglesa;
 import DeckOfCards.Palo;
+import Pila.Pila;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -109,18 +110,34 @@ public class ControladorTablero {
         }
     }
 
-    //Metodo que genera la pila de cartas para tomar y la actualiza en base al flujo de juego
+//    //Metodo que genera la pila de cartas para tomar y la actualiza en base al flujo de juego
+//    public void generarDrawPile() {
+//        drawPile.getChildren().removeIf(n -> n.getUserData() != null);
+//        if (juegoSolitario.getDrawPile().hayCartas()) {
+//            CartaInglesa cartaInglesa = juegoSolitario.getDrawPile().verCarta();
+//            CartaGUI cardGUI = new CartaGUI(cartaInglesa);
+//            cardGUI.voltearCarta();
+//            StackPane carta = cardGUI.getPane();
+//            carta.setUserData("carta");
+//            drawPile.getChildren().add(carta);
+//        }
+//    }
+
     public void generarDrawPile() {
         drawPile.getChildren().removeIf(n -> n.getUserData() != null);
+
         if (juegoSolitario.getDrawPile().hayCartas()) {
             CartaInglesa cartaInglesa = juegoSolitario.getDrawPile().verCarta();
-            CartaGUI cardGUI = new CartaGUI(cartaInglesa);
-            cardGUI.voltearCarta();
-            StackPane carta = cardGUI.getPane();
-            carta.setUserData("carta");
-            drawPile.getChildren().add(carta);
+            if (cartaInglesa != null) {
+                CartaGUI cardGUI = new CartaGUI(cartaInglesa);
+                cardGUI.voltearCarta();
+                StackPane carta = cardGUI.getPane();
+                carta.setUserData("carta");
+                drawPile.getChildren().add(carta);
+            }
         }
     }
+
 
     //Metodo que genera la pila de cartas descartadas y la actualiza en base al flujo de juego
     public void generarWastePile(){
@@ -190,14 +207,26 @@ public class ControladorTablero {
         generarEspacioTablero(drawPile, "Draw Pile");
         generarEspacioTablero(wastePile, "Waste Pile");
 
+//        drawPile.setOnMouseClicked(event -> {
+//            if(event.getButton() == MouseButton.PRIMARY){
+//                if(juegoSolitario.getDrawPile().hayCartas()){
+//                    juegoSolitario.drawCards();
+//                    reiniciarSeleccion();
+//                    actualizarGUI();
+//                }
+//            }
+//        });
+
         drawPile.setOnMouseClicked(event -> {
-            if(event.getButton() == MouseButton.PRIMARY){
-                if(juegoSolitario.getDrawPile().hayCartas()){
-                    juegoSolitario.drawCards();
-                    reiniciarSeleccion();
-                    actualizarGUI();
-                }
+            if (juegoSolitario.getDrawPile().hayCartas()) {
+                juegoSolitario.drawCards();
+            } else if (juegoSolitario.getWastePile().hayCartas()) {
+                juegoSolitario.reloadDrawPile();
             }
+
+            reiniciarSeleccion();
+            actualizarGUI();
+            actualizarReciclar();
         });
 
         deshacerAccion.setOnAction(event -> {
@@ -251,6 +280,7 @@ public class ControladorTablero {
             juegoSolitario.reloadDrawPile();
             reiniciarSeleccion();
             actualizarGUI();
+            actualizarReciclar();
         });
         Image image = new Image(getClass().getResourceAsStream("/botonReciclar.png"));
         ImageView imageView = new ImageView(image);
@@ -281,6 +311,7 @@ public class ControladorTablero {
                 reiniciarSeleccion();
                 if(seMovioCarta){
                     actualizarGUI();
+                    actualizarReciclar();
                 }
             });
         }
@@ -308,6 +339,7 @@ public class ControladorTablero {
             });
             tableu.setCursor(Cursor.HAND);
         }
+        actualizarReciclar();
     }
 
     /*Metodo que selecciona una columna y determina si hay que actualizar la interfaz en base
@@ -341,9 +373,11 @@ public class ControladorTablero {
     }
 
     //Metodo que actualiza el boton de reciclar mazo
-    public void actualizarReciclar(){
-        boolean cartasEnDrawPile = !juegoSolitario.getDrawPile().hayCartas();
-        boolean cartasEnWastePile = juegoSolitario.getWastePile().hayCartas();
-        reiniciarMazo.setDisable(!(cartasEnDrawPile && cartasEnWastePile));
+    public void actualizarReciclar() {
+        boolean drawVacio = !juegoSolitario.getDrawPile().hayCartas();
+        boolean wasteConCartas = juegoSolitario.getWastePile().hayCartas();
+
+        boolean habilitarBoton = drawVacio && wasteConCartas;
+        reiniciarMazo.setDisable(!habilitarBoton);
     }
 }

@@ -32,7 +32,10 @@ public class SolitaireGame {
     public void reloadDrawPile() {
         Pila<CartaInglesa> cards = wastePile.emptyPile();
         drawPile.recargar(cards);
+
+        drawCards();
     }
+
 
     /**
      * Move cards from Draw pile to Waste Pile.

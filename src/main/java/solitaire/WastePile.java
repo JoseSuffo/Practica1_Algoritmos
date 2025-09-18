@@ -18,26 +18,35 @@ public class WastePile {
         cartas = new Pila<CartaInglesa>(1000);
     }
 
+//    public void addCartas(Pila<CartaInglesa> nuevas) {
+//        int cantidad = nuevas.getTamaño();
+//        for (int i = 0; i < cantidad; i++) {
+//            CartaInglesa carta = nuevas.pop();
+//            if (carta != null) {
+//                cartas.push(carta);
+//            }
+//        }
+//    }
+
     public void addCartas(Pila<CartaInglesa> nuevas) {
-//        cartas.addAll(nuevas);
-        for(int i=0; i<cartas.getTamaño(); i++){
+        while (!nuevas.pilaVacia()) {
             CartaInglesa carta = nuevas.pop();
-            cartas.push(carta);
+            if (carta != null) {
+                cartas.push(carta);
+            }
         }
     }
 
+
     public Pila<CartaInglesa> emptyPile() {
         Pila<CartaInglesa> pile = new Pila<CartaInglesa>(1000);
-        if (!cartas.pilaVacia()) {
-            for(int i=0; i<cartas.getTamaño(); i++) {
-                CartaInglesa carta = cartas.pop();
-                pile.push(carta);
-            }
-//            pile.addAll(cartas);
-            cartas = new Pila<CartaInglesa>(1000);
+        while (!cartas.pilaVacia()) {
+            pile.push(cartas.pop());
         }
+        cartas = new Pila<CartaInglesa>(1000);
         return pile;
     }
+
 
     /**
      * Obtener la última carta sin removerla.
