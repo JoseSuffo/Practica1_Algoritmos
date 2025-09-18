@@ -1,6 +1,7 @@
 package solitaire;
 
 import DeckOfCards.CartaInglesa;
+import Pila.Pila;
 
 import java.util.ArrayList;
 
@@ -10,7 +11,8 @@ import java.util.ArrayList;
  * @version 2025
  */
 public class DrawPile {
-    private ArrayList<CartaInglesa> cartas;
+//    private ArrayList<CartaInglesa> cartas;
+    private Pila<CartaInglesa> cartas;
     private int cuantasCartasSeEntregan = 3;
 
     public DrawPile() {
@@ -47,7 +49,8 @@ public class DrawPile {
     public ArrayList<CartaInglesa> getCartas(int cantidad) {
         ArrayList<CartaInglesa> retiradas = new ArrayList<>();
         for (int i = 0; i < cantidad; i++) {
-            retiradas.add(cartas.remove(0));
+//            retiradas.add(cartas.remove(0));
+            retiradas.add(cartas.pop());
         }
         return retiradas;
     }
@@ -58,14 +61,29 @@ public class DrawPile {
      * que se configuró inicialmente.
      * @return Cartas retiradas.
      */
-    public ArrayList<CartaInglesa> retirarCartas() {
-        ArrayList<CartaInglesa> retiradas = new ArrayList<>();
-        int maximoARetirar = cartas.size() < cuantasCartasSeEntregan ? cartas.size() : cuantasCartasSeEntregan;
+//    public ArrayList<CartaInglesa> retirarCartas() {
+//        ArrayList<CartaInglesa> retiradas = new ArrayList<>();
+//        //int maximoARetirar = cartas.size() < cuantasCartasSeEntregan ? cartas.size() : cuantasCartasSeEntregan;
+//
+//        int maximoARetirar = Math.min(cartas.getTamaño(), cuantasCartasSeEntregan);
+//
+//        for (int i = 0; i < maximoARetirar; i++) {
+//            //CartaInglesa retirada = cartas.remove(0);
+//            CartaInglesa retirada = cartas.pop();
+//            retirada.makeFaceUp();
+//            retiradas.add(retirada);
+//        }
+//        return retiradas;
+//    }
 
-        for (int i = 0; i < maximoARetirar; i++) {
-            CartaInglesa retirada = cartas.remove(0);
+    public Pila<CartaInglesa> retirarCartas(){
+        Pila<CartaInglesa> retiradas = new Pila<CartaInglesa>(1000);
+        int maximoARetirar = Math.min(cartas.getTamaño(), cuantasCartasSeEntregan);
+
+        for(int i=0; i<maximoARetirar; i++){
+            CartaInglesa retirada = cartas.pop();
             retirada.makeFaceUp();
-            retiradas.add(retirada);
+            retiradas.push(retirada);
         }
         return retiradas;
     }
@@ -75,13 +93,13 @@ public class DrawPile {
      * @return true si hay cartas, false si no.
      */
     public boolean hayCartas() {
-        return cartas.size() > 0;
+        return cartas.getTamaño() > 0;
     }
 
     public CartaInglesa verCarta() {
         CartaInglesa regresar = null;
-        if (!cartas.isEmpty()) {
-            regresar = cartas.getLast();
+        if (!cartas.pilaVacia()) {
+            regresar = cartas.peek();
         }
         return regresar;
     }
@@ -90,16 +108,38 @@ public class DrawPile {
      * para que no se vean las caras.
      * @param cartasAgregar cartas que se agregan
      */
-    public void recargar(ArrayList<CartaInglesa> cartasAgregar) {
-        cartas = cartasAgregar;
-        for (CartaInglesa aCarta : cartas) {
-            aCarta.makeFaceDown();
+//    public void recargar(ArrayList<CartaInglesa> cartasAgregar) {
+//        cartas = cartasAgregar;
+//        for (CartaInglesa aCarta : cartas) {
+//            aCarta.makeFaceDown();
+//        }
+//
+
+    public void recargar(Pila<CartaInglesa> cartasAgregar) {
+        // Vaciar la pila actual
+        while (!cartas.pilaVacia()) {
+            cartas.pop();
+        }
+
+        Pila<CartaInglesa> temporal = new Pila<CartaInglesa>(cartasAgregar.getTamaño());
+
+        // Extraer de cartasAgregar y poner boca abajo
+        while (!cartasAgregar.pilaVacia()) {
+            CartaInglesa carta = cartasAgregar.pop();
+            carta.makeFaceDown();
+            temporal.push(carta);
+        }
+
+        // Restaurar el orden original en la pila destino
+        while (!temporal.pilaVacia()) {
+            cartas.push(temporal.pop());
         }
     }
 
+
     @Override
     public String toString() {
-        if (cartas.isEmpty()) {
+        if (cartas.pilaVacia()) {
             return "-E-";
         }
         return "@";

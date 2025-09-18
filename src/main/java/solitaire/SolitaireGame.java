@@ -2,6 +2,7 @@ package solitaire;
 
 import DeckOfCards.CartaInglesa;
 import DeckOfCards.Palo;
+import Pila.Pila;
 
 import java.util.ArrayList;
 /**
@@ -29,7 +30,7 @@ public class SolitaireGame {
      * Move cards from Waste pile to Draw Pile.
      */
     public void reloadDrawPile() {
-        ArrayList<CartaInglesa> cards = wastePile.emptyPile();
+        Pila<CartaInglesa> cards = wastePile.emptyPile();
         drawPile.recargar(cards);
     }
 
@@ -37,7 +38,7 @@ public class SolitaireGame {
      * Move cards from Draw pile to Waste Pile.
      */
     public void drawCards() {
-        ArrayList<CartaInglesa> cards = drawPile.retirarCartas();
+        Pila<CartaInglesa> cards = drawPile.retirarCartas();
         wastePile.addCartas(cards);
     }
 

@@ -1,6 +1,7 @@
 package solitaire;
 
 import DeckOfCards.CartaInglesa;
+import Pila.Pila;
 
 import java.util.ArrayList;
 /**
@@ -11,21 +12,29 @@ import java.util.ArrayList;
  * @version (2025-2)
  */
 public class WastePile {
-    private ArrayList<CartaInglesa> cartas;
+    private Pila<CartaInglesa> cartas;
 
     public WastePile() {
-        cartas = new ArrayList<>();
+        cartas = new Pila<CartaInglesa>(1000);
     }
 
-    public void addCartas(ArrayList<CartaInglesa> nuevas) {
-        cartas.addAll(nuevas);
+    public void addCartas(Pila<CartaInglesa> nuevas) {
+//        cartas.addAll(nuevas);
+        for(int i=0; i<cartas.getTamaño(); i++){
+            CartaInglesa carta = nuevas.pop();
+            cartas.push(carta);
+        }
     }
 
-    public ArrayList<CartaInglesa> emptyPile() {
-        ArrayList<CartaInglesa> pile = new ArrayList<>();
-        if (!cartas.isEmpty()) {
-            pile.addAll(cartas);
-            cartas = new ArrayList<>();
+    public Pila<CartaInglesa> emptyPile() {
+        Pila<CartaInglesa> pile = new Pila<CartaInglesa>(1000);
+        if (!cartas.pilaVacia()) {
+            for(int i=0; i<cartas.getTamaño(); i++) {
+                CartaInglesa carta = cartas.pop();
+                pile.push(carta);
+            }
+//            pile.addAll(cartas);
+            cartas = new Pila<CartaInglesa>(1000);
         }
         return pile;
     }
@@ -36,15 +45,15 @@ public class WastePile {
      */
     public CartaInglesa verCarta() {
         CartaInglesa regresar = null;
-        if (!cartas.isEmpty()) {
-            regresar = cartas.getLast();
+        if (!cartas.pilaVacia()) {
+            regresar = cartas.peek();
         }
         return regresar;
     }
     public CartaInglesa getCarta() {
         CartaInglesa regresar = null;
-        if (!cartas.isEmpty()) {
-            regresar = cartas.removeLast();
+        if (!cartas.pilaVacia()) {
+            regresar = cartas.pop();
         }
         return regresar;
     }
@@ -52,10 +61,10 @@ public class WastePile {
     @Override
     public String toString() {
         StringBuilder stb = new StringBuilder();
-        if (cartas.isEmpty()) {
+        if (cartas.pilaVacia()) {
             stb.append("---");
         } else {
-            CartaInglesa regresar = cartas.getLast();
+            CartaInglesa regresar = cartas.pop();
             regresar.makeFaceUp();
             stb.append(regresar.toString());
         }
@@ -63,6 +72,6 @@ public class WastePile {
     }
 
     public boolean hayCartas() {
-        return !cartas.isEmpty();
+        return !cartas.pilaVacia();
     }
 }
