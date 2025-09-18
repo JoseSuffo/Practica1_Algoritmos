@@ -39,9 +39,9 @@ public class Pila <T>{
     }
 
     public int getTamaño(){
-        int tamaño = 0;
-        for(int i = 0; i < pila.length; i++){
-            if(pila[i] != null){
+        int tamaño=0;
+        for(int i=0; i<pila.length; i++){
+            if(pila[i]!=null){
                 tamaño++;
             }
         }
