@@ -23,6 +23,7 @@ public class CartaInglesa extends Carta {
         return getValor() - o.getValor();
     }
 
+    //Metodo que clona la carta actual y devuelve la copia para usos del undo.
     public CartaInglesa clonar() {
         CartaInglesa copia = new CartaInglesa(getValor(), getPalo(), getColor());
         if (isFaceup()) {

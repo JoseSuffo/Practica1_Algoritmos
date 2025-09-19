@@ -23,6 +23,8 @@ public class CartaGUI {
         return contenedor;
     }
 
+
+    //Se actualiza la imagen en base a una ruta qe se recibe.
     public void actualizarImagen() {
         imagenCarta.setImage(new Image(obtenerRuta()));
     }
@@ -53,6 +55,7 @@ public class CartaGUI {
         return cartaInglesa.getValor();
     }
 
+    //Metodo que voltea la carta y actualiza la imagen.
     public void voltearCarta() {
         if (cartaInglesa != null) {
             cartaInglesa.makeFaceDown();

@@ -60,14 +60,12 @@ public class WastePile {
         return !cartas.pilaVacia();
     }
 
-    public int getTamaño(){
-        return cartas.getTamaño();
-    }
-
+    //Metodo que retorna las cartas del descarte guardadas en una Pila.
     public Pila<CartaInglesa> getCartas() {
         return cartas;
     }
 
+    //Metodo que sobreescribe las cartas actuales por unas cartas nuevas (anteriores).
     public void setCartas(ArrayList<CartaInglesa> cartasAnteriores){
         cartas = new Pila<CartaInglesa>(1000);
         for(CartaInglesa carta : cartasAnteriores){

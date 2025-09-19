@@ -224,6 +224,8 @@ public class SolitaireGame {
         return foundation.get(index);
     }
 
+    //Metodo que se encarga de actualizar los componentes de un juego de solitario en base a un tablero
+    //anterior.
     public void restaurarEstado(TableroActual estado) {
         tableau.clear();
         for (ArrayList<CartaInglesa> columna : estado.getTableau()) {

@@ -103,14 +103,12 @@ public class DrawPile {
         }
     }
 
-    public int getTamaño(){
-        return cartas.getTamaño();
-    }
-
+    //Metodo que retorna las cartas de la DrawPile guardadas en una pila.
     public Pila<CartaInglesa> getCartas() {
         return cartas;
     }
 
+    //Metodo que sobreescribe las cartas actuales por unas nuevas (anteriores).
     public void setCartas(ArrayList<CartaInglesa> cartasAnteriores){
         cartas = new Pila<CartaInglesa>(1000);
         for (CartaInglesa carta : cartasAnteriores) {

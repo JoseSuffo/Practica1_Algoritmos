@@ -199,10 +199,12 @@ public class TableauDeck {
         return resultado;
     }
 
+    //Metodo que retorna las cartas del tableau guardadas en un ArrayList
     public ArrayList<CartaInglesa> getCards() {
         return cartas;
     }
 
+    //Metodo que sobreescribe las cartas actuales por unas cartas nuevas (anteriores).
     public void setCards(ArrayList<CartaInglesa> cards) {
         cartas = new ArrayList<>();
         cartas.addAll(cards);

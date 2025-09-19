@@ -83,10 +83,12 @@ public class FoundationDeck {
         return ultimaCarta;
     }
 
+    //Metodo que retorna las cartas de la foundation guardadas en un ArrayList.
     public ArrayList<CartaInglesa> getCartas() {
         return cartas;
     }
 
+    //Metodo que sobreescribe las cartas actuales por unas cartas nuevas (anteriores).
     public void setCartas(ArrayList<CartaInglesa> cartas) {
         this.cartas = new ArrayList<>(cartas);
     }

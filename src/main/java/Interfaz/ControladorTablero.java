@@ -20,7 +20,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import solitaire.SolitaireGame;
-
 import java.util.Optional;
 
 public class ControladorTablero {
@@ -45,7 +44,7 @@ public class ControladorTablero {
     Button salir = new Button("Salir");
     Button reiniciarJuego = new Button("Reiniciar Juego");
     Button reiniciarMazo = new Button();
-    Button deshacerAccion = new Button("Deshacer Accion (stand by)");
+    Button deshacerAccion = new Button("Deshacer Accion");
     TableroGUI tableroGUI;
 
     //Creación de la pila que almacenará los movimientos
@@ -223,8 +222,11 @@ public class ControladorTablero {
                 noUndo.showAndWait();
             }
         });
-        deshacerAccion.setStyle("-fx-background-color: linear-gradient(to bottom, #90CAF9, #1976D2);\n");
         deshacerAccion.setTextFill(Color.WHITE);
+        deshacerAccion.setOnMouseEntered(e -> deshacerAccion.setStyle(
+                "-fx-background-color: linear-gradient(to bottom, #1976D2, #90CAF9);"));
+        deshacerAccion.setOnMouseExited(e -> deshacerAccion.setStyle(
+                "-fx-background-color: linear-gradient(to bottom, #90CAF9, #1976D2);"));
 
         salir.setOnAction(event -> {
             Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
@@ -243,7 +245,10 @@ public class ControladorTablero {
                 mensaje.showAndWait();
             }
         });
-        salir.setStyle("-fx-background-color: linear-gradient(to bottom, #90CAF9, #1976D2);\n");
+        salir.setOnMouseEntered(e -> salir.setStyle(
+                "-fx-background-color: linear-gradient(to bottom, #1976D2, #90CAF9);"));
+        salir.setOnMouseExited(e -> salir.setStyle(
+                "-fx-background-color: linear-gradient(to bottom, #90CAF9, #1976D2);"));
         salir.setTextFill(Color.WHITE);
 
         reiniciarJuego.setOnAction(event -> {
@@ -265,7 +270,10 @@ public class ControladorTablero {
                 mensaje.showAndWait();
             }
         });
-        reiniciarJuego.setStyle("-fx-background-color: linear-gradient(to bottom, #90CAF9, #1976D2);\n");
+        reiniciarJuego.setOnMouseEntered(e -> reiniciarJuego.setStyle(
+                "-fx-background-color: linear-gradient(to bottom, #1976D2, #90CAF9);"));
+        reiniciarJuego.setOnMouseExited(e -> reiniciarJuego.setStyle(
+                "-fx-background-color: linear-gradient(to bottom, #90CAF9, #1976D2);"));
         reiniciarJuego.setTextFill(Color.WHITE);
 
         reiniciarMazo.setOnAction(event -> {
