@@ -41,9 +41,7 @@ public class SolitaireGame {
      * Move cards from Draw pile to Waste Pile.
      */
     public void drawCards() {
-        System.out.println("Antes de retirar: " + drawPile.getTamaño());
         Pila<CartaInglesa> cards = drawPile.retirarCartas();
-        System.out.println("Después de retirar: " + drawPile.getTamaño());
         wastePile.addCartas(cards);
     }
 
@@ -113,7 +111,6 @@ public class SolitaireGame {
         if (moveCartaToFoundation(carta)) {
             movimientoRealizado = true;
         } else {
-            // regresar la carta al tableau porque no se puede hacer el movimiento
             fuente.agregarCarta(carta);
         }
         return movimientoRealizado;
@@ -130,7 +127,6 @@ public class SolitaireGame {
 
         CartaInglesa carta = wastePile.verCarta();
         if (moveCartaToTableau(carta, tableau)) {
-            // si es movimiento válido, elimina la carta de la pila
             carta = wastePile.getCarta();
             movimientoRealizado = true;
         }
@@ -147,7 +143,6 @@ public class SolitaireGame {
 
         CartaInglesa carta = wastePile.verCarta();
         if (moveCartaToFoundation(carta)) {
-            // si es movimiento válido, elimina la carta de la pila
             carta = wastePile.getCarta();
             movimientoRealizado = true;
         }
@@ -191,7 +186,6 @@ public class SolitaireGame {
                 gameOver = false;
             } else {
                 CartaInglesa ultimaCarta = foundation.getUltimaCarta();
-                // si la última carta no es rey, no se ha terminado
                 if (ultimaCarta.getValor() != 13) {
                     gameOver = false;
                 }
@@ -226,24 +220,43 @@ public class SolitaireGame {
         return wastePile;
     }
 
-    public FoundationDeck getLastFoundationUpdated() {
-        return lastFoundationUpdated;
-    }
-
     public FoundationDeck obtenerFoundation(int index) {
         return foundation.get(index);
     }
 
     public void restaurarEstado(TableroActual estado) {
-        if (estado.getTableau().size() != tableau.size()) return;
-        if (estado.getFoundation().size() != foundation.size()) return;
-        for (int i = 0; i < tableau.size(); i++) {
-            tableau.get(i).setCards(new ArrayList<>(estado.getTableau().get(i)));
+        tableau.clear();
+        for (ArrayList<CartaInglesa> columna : estado.getTableau()) {
+            TableauDeck nuevo = new TableauDeck();
+            ArrayList<CartaInglesa> cartasClonadas = new ArrayList<>();
+            for (CartaInglesa carta : columna) {
+                cartasClonadas.add(carta.clonar());
+            }
+            nuevo.setCards(cartasClonadas);
+            tableau.add(nuevo);
         }
-        for (int i = 0; i < foundation.size(); i++) {
-            foundation.get(i).setCartas(new ArrayList<>(estado.getFoundation().get(i)));
+
+        foundation.clear();
+        for (int i = 0; i < estado.getFoundation().size(); i++) {
+            FoundationDeck nuevo = new FoundationDeck(Palo.values()[i]);
+            ArrayList<CartaInglesa> cartasClonadas = new ArrayList<>();
+            for (CartaInglesa carta : estado.getFoundation().get(i)) {
+                cartasClonadas.add(carta.clonar());
+            }
+            nuevo.setCartas(cartasClonadas);
+            foundation.add(nuevo);
         }
-        drawPile.setCartas(estado.getDrawPile());
-        wastePile.setCartas(estado.getWastePile());
+
+        ArrayList<CartaInglesa> drawClonado = new ArrayList<>();
+        for (CartaInglesa carta : estado.getDrawPile()) {
+            drawClonado.add(carta.clonar());
+        }
+        drawPile.setCartas(drawClonado);
+
+        ArrayList<CartaInglesa> wasteClonado = new ArrayList<>();
+        for (CartaInglesa carta : estado.getWastePile()) {
+            wasteClonado.add(carta.clonar());
+        }
+        wastePile.setCartas(wasteClonado);
     }
 }

@@ -192,24 +192,11 @@ public class TableauDeck {
                 }
             }
         } else {
-            // Está vacio el tableau, solo se puede agregar la cara si es rey
             if (cartaInicialDePrueba.getValor() == 13) {
                 resultado = true;
             }
         }
         return resultado;
-    }
-
-    /**
-     * Obtiene la última carta del Tableau sin removerla.
-     * @return última carta, null si no hay cartas
-     */
-    public CartaInglesa getUltimaCarta() {
-        CartaInglesa ultimaCarta = null;
-        if (!cartas.isEmpty()) {
-            ultimaCarta = cartas.getLast();
-        }
-        return ultimaCarta;
     }
 
     public ArrayList<CartaInglesa> getCards() {

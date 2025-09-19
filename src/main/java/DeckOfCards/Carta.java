@@ -65,23 +65,9 @@ public abstract class Carta implements Comparable<Carta> {
         };
     }
 
-    public boolean tieneElMismoValor(Carta carta) {
-        return valor == carta.valor;
-    }
     public boolean tieneElMismoPalo(Palo palo) {
         return this.palo.equals(palo);
     }
-    public boolean esLaSiguiente(Carta carta) {
-        if (valor+1 == carta.valor) {
-            return true;
-        }
-        // verificar si es un As y un 2
-        if (valor == 14 && carta.valor == 2) {
-            return true;
-        }
-        return false;
-    }
-
     public int getValor() {
         return valor;
     }

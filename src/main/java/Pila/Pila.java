@@ -61,16 +61,6 @@ public class Pila <T>{
         }
     }
 
-    public Pila<T> clonar() {
-        Pila<T> copia = new Pila<T>(valorMaximo);
-        for (int i = 0; i <= tope; i++) {
-            copia.pila[i] = pila[i]; // copia directa
-        }
-        copia.tope = this.tope;
-        return copia;
-    }
-
-
     public ArrayList<T> toList() {
         ArrayList<T> lista = new ArrayList<>();
         for (int i = 0; i <= tope; i++) {

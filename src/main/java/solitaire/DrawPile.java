@@ -30,15 +30,6 @@ public class DrawPile {
     }
 
     /**
-     * Regresa la cantidad de cartas que se sacan cada vez.
-     *
-     * @return cantidad de cartas que se entregan
-     */
-    public int getCuantasCartasSeEntregan() {
-        return cuantasCartasSeEntregan;
-    }
-
-    /**
      * Retirar una cantidad de cartas. Este método se utiliza al inicio
      * de una partida para cargar las cartas de los tableaus.
      * Si se tratan de remover más cartas de las que hay,

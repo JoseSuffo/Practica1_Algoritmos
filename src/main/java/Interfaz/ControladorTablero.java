@@ -61,6 +61,7 @@ public class ControladorTablero {
         tableroGUI = new TableroGUI();
         crearGUI();
         actualizarGUI();
+        historial.push(new TableroActual(juegoSolitario));
     }
 
     //Metodo que actualiza la interfaz cada vez que se realiza una acción
@@ -68,7 +69,6 @@ public class ControladorTablero {
         generarDrawPile();
         generarWastePile();
         actualizarReciclar();
-        imprimirEstadoJuego();
         generarTablero();
         generarFoundations();
     }
@@ -129,7 +129,6 @@ public class ControladorTablero {
             }
         }
     }
-
 
     //Metodo que genera la pila de cartas descartadas y la actualiza en base al flujo de juego
     public void generarWastePile(){
@@ -200,11 +199,10 @@ public class ControladorTablero {
         generarEspacioTablero(wastePile, "Waste Pile");
 
         drawPile.setOnMouseClicked(event -> {
-            historial.push(new TableroActual(juegoSolitario));
-
-            if (juegoSolitario.getDrawPile().hayCartas()) {
+            if (juegoSolitario.getDrawPile().hayCartas() || juegoSolitario.getWastePile().hayCartas()) {
+                historial.push(new TableroActual(juegoSolitario));
                 juegoSolitario.drawCards();
-            } else if (juegoSolitario.getWastePile().hayCartas()) {
+            } else {
                 juegoSolitario.reloadDrawPile();
             }
 
@@ -216,11 +214,13 @@ public class ControladorTablero {
             if (!historial.pilaVacia()) {
                 TableroActual estadoAnterior = historial.pop();
                 juegoSolitario.restaurarEstado(estadoAnterior);
-                System.out.println("Estado restaurado:");
-                for (int i = 0; i < juegoSolitario.getTableau().size(); i++) {
-                    System.out.println("Tableau " + i + ": " + juegoSolitario.getTableau().get(i));
-                }
                 actualizarGUI();
+            }else{
+                Alert noUndo = new Alert(Alert.AlertType.WARNING);
+                noUndo.setTitle("Advertencia de Undo");
+                noUndo.setHeaderText("Sin movimientos realizados!");
+                noUndo.setContentText("No hay movimientos previos realizados, intenta nuevamente!");
+                noUndo.showAndWait();
             }
         });
         deshacerAccion.setStyle("-fx-background-color: linear-gradient(to bottom, #90CAF9, #1976D2);\n");
@@ -292,6 +292,7 @@ public class ControladorTablero {
                     return;
                 }
                 boolean seMovioCarta = false;
+                TableroActual estadoPrevio = new TableroActual(juegoSolitario);
                 switch(seleccionOrigen){
                     case "WASTE PILE":
                         seMovioCarta = juegoSolitario.moveWasteToFoundation();
@@ -301,8 +302,8 @@ public class ControladorTablero {
                         break;
                 }
                 reiniciarSeleccion();
-                if(seMovioCarta){
-                    historial.push(new TableroActual(juegoSolitario));
+                if(seMovioCarta) {
+                    historial.push(estadoPrevio);
                     actualizarGUI();
                     verificarFinDeJuego();
                 }
@@ -342,6 +343,7 @@ public class ControladorTablero {
             seSeleccionoCarta = true;
             seleccionOrigen = "TABLEU";
         }else{
+            TableroActual estadoPrevio = new TableroActual(juegoSolitario);
             boolean seMovioCarta = false;
             if("WASTE PILE".equals(seleccionOrigen)){
                 seMovioCarta = juegoSolitario.moveWasteToTableau(index);
@@ -352,7 +354,7 @@ public class ControladorTablero {
             }
             reiniciarSeleccion();
             if(seMovioCarta) {
-                historial.push(new TableroActual(juegoSolitario));
+                historial.push(estadoPrevio);
                 actualizarGUI();
                 verificarFinDeJuego();
             }
@@ -375,12 +377,8 @@ public class ControladorTablero {
         reiniciarMazo.setDisable(!habilitarBoton);
     }
 
-    public void imprimirEstadoJuego() {
-        System.out.println("DrawPile tamaño: " + juegoSolitario.getDrawPile().getTamaño());
-        System.out.println("WastePile tamaño: " + juegoSolitario.getWastePile().getTamaño());
-        System.out.println("Botón reciclaje habilitado: " + !reiniciarMazo.isDisabled());
-    }
-
+    //Metodo que verifica que sea el fin de juego. En caso de cumplirse, se muestra una alerta
+    //y se reinicia el juego.
     public void verificarFinDeJuego(){
         if(juegoSolitario.isGameOver()){
             Alert ganador = new  Alert(Alert.AlertType.INFORMATION);

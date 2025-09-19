@@ -31,7 +31,6 @@ public class CartaGUI {
         if (!isFaceup()) {
             return "/ImagenesCartas/cartaVolteada.png";
         }
-
         String nombreArchivo = switch (getValor()) {
             case 11 -> "J" + getPalo() + ".png";
             case 12 -> "Q" + getPalo() + ".png";
@@ -39,7 +38,6 @@ public class CartaGUI {
             case 14 -> "A" + getPalo() + ".png";
             default -> Integer.toString(getValor()) + getPalo() + ".png";
         };
-
         return "/ImagenesCartas/" + nombreArchivo;
     }
 

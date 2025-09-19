@@ -20,14 +20,6 @@ public class FoundationDeck {
         this.palo = palo;
     }
 
-    public FoundationDeck(CartaInglesa carta) {
-        palo = carta.getPalo();
-        // solo agrega la carta si es un A
-        if (carta.getValorBajo() == 1) {
-            cartas.add(carta);
-        }
-    }
-
     /**
      * Agrega una carta al montículo. Sólo la agrega si
      * la carta es del palo del montículo y el la siguiente
@@ -56,20 +48,6 @@ public class FoundationDeck {
             }
         }
         return agregado;
-    }
-
-    /**
-     * Remover la última carta del montículo.
-     *
-     * @return la carta que removió, null si estaba vacio
-     */
-    CartaInglesa removerUltimaCarta() {
-        CartaInglesa ultimaCarta = null;
-        if (!cartas.isEmpty()) {
-            ultimaCarta = cartas.getLast();
-            cartas.remove(ultimaCarta);
-        }
-        return ultimaCarta;
     }
 
     @Override

@@ -21,15 +21,6 @@ public class TableroActual {
         this.wastePile = clonarPila(juego.getWastePile().getCartas());
     }
 
-    // Métodos auxiliares para clonar defensivamente
-//    private ArrayList<ArrayList<CartaInglesa>> clonarTableaux(ArrayList<TableauDeck> originales) {
-//        ArrayList<ArrayList<CartaInglesa>> copia = new ArrayList<>();
-//        for (TableauDeck deck : originales) {
-//            copia.add(new ArrayList<>(deck.getCards()));
-//        }
-//        return copia;
-//    }
-
     private ArrayList<ArrayList<CartaInglesa>> clonarTableaux(ArrayList<TableauDeck> originales) {
         ArrayList<ArrayList<CartaInglesa>> copia = new ArrayList<>();
         for (TableauDeck deck : originales) {
@@ -57,12 +48,11 @@ public class TableroActual {
     private ArrayList<CartaInglesa> clonarPila(Pila<CartaInglesa> pilaOriginal) {
         ArrayList<CartaInglesa> copia = new ArrayList<>();
         for (CartaInglesa carta : pilaOriginal.toList()) {
-            copia.add(carta.clonar()); // clonado profundo
+            copia.add(carta.clonar());
         }
         return copia;
     }
 
-    // Getters
     public ArrayList<ArrayList<CartaInglesa>> getTableau() { return tableau; }
     public ArrayList<ArrayList<CartaInglesa>> getFoundation() { return foundation; }
     public ArrayList<CartaInglesa> getDrawPile() { return drawPile; }

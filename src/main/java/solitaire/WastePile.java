@@ -19,11 +19,12 @@ public class WastePile {
     }
 
     public void addCartas(Pila<CartaInglesa> nuevas) {
+        Pila<CartaInglesa> temp = new Pila<CartaInglesa>(nuevas.getTamaño());
         while (!nuevas.pilaVacia()) {
-            CartaInglesa carta = nuevas.pop();
-            if (carta != null) {
-                cartas.push(carta);
-            }
+            temp.push(nuevas.pop());
+        }
+        while (!temp.pilaVacia()) {
+            cartas.push(temp.pop());
         }
     }
 
